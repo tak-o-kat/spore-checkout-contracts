@@ -1,0 +1,75 @@
+{
+  "name": "Dispenser",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "getAssetId",
+      "args": [],
+      "returns": {
+        "type": "uint64"
+      }
+    },
+    {
+      "name": "getDispenseAmount",
+      "args": [],
+      "returns": {
+        "type": "uint64"
+      }
+    },
+    {
+      "name": "getSporeBalance",
+      "args": [],
+      "returns": {
+        "type": "uint64"
+      }
+    },
+    {
+      "name": "getDispenseCount",
+      "args": [],
+      "returns": {
+        "type": "uint64"
+      }
+    },
+    {
+      "name": "createSporeAsset",
+      "desc": "Create SPORE coin asset",
+      "args": [
+        {
+          "name": "name",
+          "type": "string",
+          "desc": "The name of the asset"
+        },
+        {
+          "name": "unitName",
+          "type": "string",
+          "desc": "The unit name of the asset"
+        }
+      ],
+      "returns": {
+        "type": "uint64",
+        "desc": "The id of the asset"
+      }
+    },
+    {
+      "name": "dispense",
+      "desc": "Dispense the asset",
+      "args": [
+        {
+          "name": "assetId",
+          "type": "uint64",
+          "desc": "The id of the asset"
+        }
+      ],
+      "returns": {
+        "type": "void"
+      }
+    }
+  ]
+}

@@ -1,57 +1,74 @@
 import { Contract } from '@algorandfoundation/tealscript';
 
 export class Dispenser extends Contract {
-  /**
-   * Calculates the sum of two numbers
-   *
-   * @param a
-   * @param b
-   * @returns The sum of a and b
-   */
-  private getSum(a: uint64, b: uint64): uint64 {
-    return a + b;
+  /** ID of the SPORE asa that we're dispensing. */
+  assetId = GlobalStateKey<AssetID>();
+
+  /** The amount to dispense per call. */
+  unitaryDispense = GlobalStateKey<uint64>();
+
+  /** Number of times SPORE has been dispensed. */
+  dispenseCount = GlobalStateKey<uint64>();
+
+  createApplication(): void {
+    assert(!this.unitaryDispense.exists);
+    assert(!this.dispenseCount.exists);
+    this.unitaryDispense.value = 1_000;
+    this.dispenseCount.value = 0;
+  }
+
+  getAssetId(): AssetID {
+    return this.assetId.value;
+  }
+
+  getDispenseAmount(): uint64 {
+    return this.unitaryDispense.value;
+  }
+
+  getSporeBalance(): uint64 {
+    return this.app.address.assetBalance(this.assetId.value);
+  }
+
+  getDispenseCount(): uint64 {
+    return this.dispenseCount.value;
   }
 
   /**
-   * Calculates the difference between two numbers
+   * Create SPORE coin asset
    *
-   * @param a
-   * @param b
-   * @returns The difference between a and b.
+   * @param name The name of the asset
+   * @param unitName The unit name of the asset
+   * @returns The id of the asset
    */
-  private getDifference(a: uint64, b: uint64): uint64 {
-    return a >= b ? a - b : b - a;
+  createSporeAsset(name: string, unitName: string): AssetID {
+    verifyTxn(this.txn, { sender: this.app.creator });
+    assert(!this.assetId.exists);
+    this.assetId.value = sendAssetCreation({
+      configAssetName: name,
+      configAssetUnitName: unitName,
+      configAssetTotal: 1_000_000_000,
+      configAssetDecimals: 0,
+      configAssetDefaultFrozen: 0,
+    });
+
+    return this.assetId.value;
   }
 
   /**
-   * A method that takes two numbers and does either addition or subtraction
+   * Dispense the asset
    *
-   * @param a The first uint64
-   * @param b The second uint64
-   * @param operation The operation to perform. Can be either 'sum' or 'difference'
+   * @param assetId The id of the asset
    *
-   * @returns The result of the operation
    */
-  doMath(a: uint64, b: uint64, operation: string): uint64 {
-    let result: uint64;
+  // eslint-disable-next-line no-unused-vars
+  dispense(assetId: AssetID): void {
+    // Send asset to sender
+    sendAssetTransfer({
+      xferAsset: this.assetId.value,
+      assetAmount: this.unitaryDispense.value,
+      assetReceiver: this.txn.sender,
+    });
 
-    if (operation === 'sum') {
-      result = this.getSum(a, b);
-    } else if (operation === 'difference') {
-      result = this.getDifference(a, b);
-    } else throw Error('Invalid operation');
-
-    return result;
-  }
-
-  /**
-   * A demonstration method used in the AlgoKit fullstack template.
-   * Greets the user by name.
-   *
-   * @param name The name of the user to greet.
-   * @returns A greeting message to the user.
-   */
-  hello(name: string): string {
-    return 'Hello, ' + name;
+    this.dispenseCount.value += 1;
   }
 }

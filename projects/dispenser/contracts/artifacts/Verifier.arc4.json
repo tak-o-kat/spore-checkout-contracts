@@ -1,0 +1,74 @@
+{
+  "name": "Verifier",
+  "desc": "",
+  "methods": [
+    {
+      "name": "createApplication",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    },
+    {
+      "name": "initVerifier",
+      "desc": "Initializes the Verifier smart contract",
+      "args": [
+        {
+          "name": "assetId",
+          "type": "uint64"
+        },
+        {
+          "name": "dispenserAddress",
+          "type": "address"
+        }
+      ],
+      "returns": {
+        "type": "void",
+        "desc": "The id of the asset"
+      }
+    },
+    {
+      "name": "verifyAssetTxnAmount",
+      "desc": "Verifies the amount being sent is within the bounds",
+      "args": [
+        {
+          "name": "amount",
+          "type": "uint64"
+        }
+      ],
+      "returns": {
+        "type": "bool"
+      }
+    },
+    {
+      "name": "sendAssetToContract",
+      "desc": "Send asset to contract",
+      "args": [
+        {
+          "name": "axfer",
+          "type": "axfer"
+        }
+      ],
+      "returns": {
+        "type": "string",
+        "desc": "The id of the asset"
+      }
+    },
+    {
+      "name": "getDispenserAddress",
+      "desc": "Get dispenser address",
+      "args": [],
+      "returns": {
+        "type": "address",
+        "desc": "The address of the dispenser"
+      }
+    },
+    {
+      "name": "sendAssetBalanceToDispenser",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    }
+  ]
+}
